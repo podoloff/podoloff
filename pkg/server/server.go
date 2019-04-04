@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/hasheddan/charon/pkg/user"
+	"github.com/podoloff/podoloff/pkg/user"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )

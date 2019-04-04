@@ -8,9 +8,9 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "charon",
-	Short: "Charon is an open source content moderator.",
-	Long: `Charon is an open source content moderator that allows
+	Use:   "podoloff",
+	Short: "Podoloff is an open source content moderator.",
+	Long: `Podoloff is an open source content moderator that allows
 			users to define the way they want to filter content,
 			allowing their communities to stay positive, curious, and growing.`,
 }
