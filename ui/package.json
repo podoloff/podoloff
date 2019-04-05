@@ -1,0 +1,11 @@
+{
+  "name": "podoloff",
+  "version": "0.1.0",
+  "description": "Podoloff UI",
+  "license": "MIT",
+  "scripts": {
+    "start": "preact watch",
+    "build": "preact build",
+    "serve": "preact serve"
+  }
+}

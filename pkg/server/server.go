@@ -73,5 +73,9 @@ func registerEndpoints(s *Srv) *http.ServeMux {
 		user.CreateUser(s.db, w, r)
 	})
 
+	mux.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request) {
+		user.AuthUser(s.db, w, r)
+	})
+
 	return mux
 }
