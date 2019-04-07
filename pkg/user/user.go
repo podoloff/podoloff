@@ -21,12 +21,20 @@ func encryptPassword(password []byte) string {
 }
 
 // Decode request body into User struct
-func parseUser(r *http.Request) (User, error) {
+func parseUser(r *http.Request) (*User, error) {
 	var u User
 	if r.Body == nil {
-		return u, errors.New("No request body")
+		return &u, errors.New("No request body")
 	}
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&u)
-	return u, err
+	return &u, err
+}
+
+func parseToken(r *http.Request) (string, error) {
+	cookie, err := r.Cookie("session_token")
+	if err != nil {
+		return "", err
+	}
+	return cookie.Value, err
 }
