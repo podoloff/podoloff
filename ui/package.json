@@ -7,5 +7,14 @@
     "start": "preact watch",
     "build": "preact build",
     "serve": "preact serve"
+  },
+  "dependencies": {
+    "preact": "^8.2.6",
+    "preact-compat": "^3.17.0",
+    "preact-router": "^2.5.7"
+  },
+  "devDependencies": {
+    "preact-cli": "^2.1.0",
+    "preact-render-spy": "^1.2.1"
   }
 }

@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/podoloff/podoloff/pkg/user"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -22,6 +21,7 @@ type Srv struct {
 	connStr string
 	db      *mongo.Client
 	server  *http.Server
+	cache   map[string]string
 }
 
 // NewHTTPServer returns a Srv instance
@@ -30,6 +30,7 @@ func NewHTTPServer(port string, dbconn string) *Srv {
 		port:    port,
 		connStr: dbconn,
 		server:  &http.Server{Addr: ":" + port},
+		cache:   make(map[string]string),
 	}
 }
 
@@ -70,11 +71,15 @@ func registerEndpoints(s *Srv) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
-		user.CreateUser(s.db, w, r)
+		CreateUser(s, w, r)
 	})
 
 	mux.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request) {
-		user.AuthUser(s.db, w, r)
+		AuthUser(s, w, r)
+	})
+
+	mux.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
+		AuthTest(s, w, r)
 	})
 
 	return mux
