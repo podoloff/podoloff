@@ -9,6 +9,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+type contextKey string
+
+func (c contextKey) String() string {
+	return "server context key: " + string(c)
+}
+
 // Server is interface defining methods required of the server
 type Server interface {
 	Start() error
@@ -71,15 +77,23 @@ func registerEndpoints(s *Srv) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
-		CreateUser(s, w, r)
+		s.createUser(w, r)
 	})
 
 	mux.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request) {
-		AuthUser(s, w, r)
+		s.authUser(w, r)
 	})
 
 	mux.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
-		AuthTest(s, w, r)
+		s.authTest(w, r)
+	})
+
+	mux.HandleFunc("/registerorg", func(w http.ResponseWriter, r *http.Request) {
+		s.createOrg(w, r)
+	})
+
+	mux.HandleFunc("/getorg", func(w http.ResponseWriter, r *http.Request) {
+		s.getOrg(w, r)
 	})
 
 	return mux
