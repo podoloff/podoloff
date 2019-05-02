@@ -1,6 +1,8 @@
 import { h, Component } from 'preact';
 import { Router } from 'preact-router';
 
+import Login from './login'
+import Dashboard from './dashboard';
 export default class App extends Component {
 
 	/** Gets fired when the route changes.
@@ -14,9 +16,12 @@ export default class App extends Component {
     render() {
         return (
             <div id="app">
-                <h1>Welcome to Podoloff</h1>
-                <Router onChange={this.handleRoute}>
-                </Router>
+                {false ? // TODO: replace with login check
+                    <Router onChange={this.handleRoute}>
+                        <Dashboard path="/" />
+                    </Router>
+                    : <Login></Login>
+                }
             </div>
         );
     }
