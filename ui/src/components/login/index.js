@@ -1,13 +1,30 @@
 import { h, Component } from 'preact';
 import linkstate from 'linkstate'
 
+import { login, isAuthed } from '../../util/auth'
 
 class Login extends Component {
-    render({ }, { email, password }) {
+
+    state = { res: "" };
+
+    Login() {
+        login(this.state.email, this.state.password).then((res) => {
+            this.setState({ res });
+        });
+    }
+
+    Auth() {
+        isAuthed().then((res) => {
+            this.setState({ res });
+        });
+    }
+
+    render({ }, { email, password, res }) {
         return (
             <div>
                 <h3>Login</h3>
                 <hr />
+                {res}
                 <div>
                     <h1>Dashboard</h1>
                     <div>
@@ -21,7 +38,9 @@ class Login extends Component {
 
                     <div>
                         <br />
-                        <input type="button" value="Submit" />
+                        <input type="button" value="Submit" onClick={() => this.Login()} />
+                        <br />
+                        <input type="button" value="Check" onClick={() => this.Auth()} />
                     </div>
                 </div>
             </div>

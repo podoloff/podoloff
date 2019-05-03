@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 	"io"
 	"log"
 	"net/http"
@@ -63,12 +64,18 @@ func (s *Srv) authUser(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, u.IssueCookie())
 	log.Print(result.ID)
 	s.cache[u.LiveToken] = u.Email
-	io.WriteString(w, "User authenticated.")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode("User authenticated.")
 	return
 }
 
 // AuthTest tests to see if use has active session
 func (s *Srv) authTest(w http.ResponseWriter, r *http.Request) {
-	token, _ := utils.ParseCookie(r)
-	io.WriteString(w, "You are authenticated as... "+s.cache[token])
+	token, err := utils.ParseCookie(r)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode("You are authenticated as... " + s.cache[token])
+	return
 }
