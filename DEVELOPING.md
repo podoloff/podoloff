@@ -14,3 +14,9 @@
 5. Stop podoloff `Ctrl+C`
 6. Stop MongoDB
     ```brew services stop mongodb-community@4.0```
+
+## Running Podoloff Using Docker and Minikube
+
+1. `minikube start`
+2. `eval $(minikube docker-env)`
+3. `docker build -t podoloff/server ./build/package/podoloff/`
