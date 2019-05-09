@@ -1,37 +1,39 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: podoloff
+  name: frontend
 spec:
   selector:
     app: podoloff
-    tier: backend
+    tier: frontend
   ports:
-  - protocol: TCP
+  - protocol: "TCP"
     port: 80
-    targetPort: http
+    targetPort: 80
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: podoloff
+  name: frontend
 spec:
   selector:
     matchLabels:
       app: podoloff
-      tier: backend
+      tier: frontend
       track: stable
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
         app: podoloff
-        tier: backend
+        tier: frontend
         track: stable
     spec:
       containers:
-        - name: podoloff
-          image: podoloff/server
-          ports:
-            - name: http
-              containerPort: 80
+      - name: nginx
+        image: podoloff/frontend
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/usr/sbin/nginx","-s","quit"]

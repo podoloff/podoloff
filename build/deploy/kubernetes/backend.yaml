@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: podoloff
+spec:
+  selector:
+    app: podoloff
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podoloff
+spec:
+  selector:
+    matchLabels:
+      app: podoloff
+      tier: backend
+      track: stable
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: podoloff
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        - name: podoloff
+          image: podoloff/backend
+          ports:
+            - name: http
+              containerPort: 80

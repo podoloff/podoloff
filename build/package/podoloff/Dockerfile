@@ -1,21 +1,27 @@
 FROM golang:alpine as builder
 
-RUN mkdir /server
+RUN apk add --no-cache ca-certificates git
 
-ADD . /server
+# Download and install the latest release of dep
+ADD https://github.com/golang/dep/releases/download/v0.4.1/dep-linux-amd64 /usr/bin/dep
+RUN chmod +x /usr/bin/dep
 
-WORKDIR /server
+WORKDIR $GOPATH/src/github.com/podoloff/podoloff
+
+COPY . ./
+
+RUN dep ensure --vendor-only
 
 RUN go build -o podoloff .
 
 FROM alpine
 
-RUN adduser -S -D -H -h /app appuser
+RUN mkdir app
 
-USER appuser
-
-COPY --from=builder /server/podoloff /app/
+COPY --from=builder /go/src/github.com/podoloff/podoloff/podoloff /app/
 
 WORKDIR /app
 
-CMD ["./podoloff"]
+EXPOSE 8080
+
+CMD ["./podoloff", "start"]

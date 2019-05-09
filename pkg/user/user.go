@@ -30,7 +30,8 @@ func (u *User) ParseUser(r *http.Request) error {
 
 // IssueCookie creates a new cookie
 func (u *User) IssueCookie() *http.Cookie {
-	token := uuid.Must(uuid.NewV4()).String()
+	token := uuid.Must(uuid.NewV4(), nil).String()
+
 	u.LiveToken = token
 	return &http.Cookie{
 		Name:    "session_token",

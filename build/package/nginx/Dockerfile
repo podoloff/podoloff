@@ -1,8 +1,17 @@
-# Pull nginx base image
+FROM node:9.6.1 as builder
+
+RUN mkdir /frontend
+
+ADD ./ui /frontend
+
+WORKDIR /frontend
+
+RUN npm run build
+
 FROM nginx:latest
 
-# Expost port 80
-EXPOSE 80
+COPY --from=builder /frontend/build/. /html/
 
-# Copy custom configuration file from the current directory
-COPY nginx.conf /etc/nginx/nginx.conf
+EXPOSE 8080
+
+COPY ./build/package/nginx/nginx.conf /etc/nginx/nginx.conf

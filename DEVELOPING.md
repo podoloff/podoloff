@@ -19,4 +19,5 @@
 
 1. `minikube start`
 2. `eval $(minikube docker-env)`
-3. `docker build -t podoloff/server ./build/package/podoloff/`
+3. `docker build -f ./build/package/podoloff/Dockerfile . -t podoloff/backend`
+4. `docker build -f ./build/package/nginx/Dockerfile . -t podoloff/frontend`
