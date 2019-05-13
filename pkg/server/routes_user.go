@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"encoding/json"
-	"io"
 	"log"
 	"net/http"
 
@@ -29,15 +28,18 @@ func (s *Srv) createUser(w http.ResponseWriter, r *http.Request) {
 		if err.Error() == "mongo: no documents in result" {
 			_, err = s.db.Database("podoloff").Collection("users").InsertOne(context.TODO(), u)
 			if err != nil {
-				io.WriteString(w, "Unable to add user. Please try again.")
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode("Unable to add user. Please try again.")
 				return
 			}
-			io.WriteString(w, "User successfully added!")
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode("User successfully added.")
 			return
 		}
 	}
 
-	io.WriteString(w, "User email already used. Please try again.")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode("User email already used. Please try again")
 	return
 }
 
@@ -51,13 +53,15 @@ func (s *Srv) authUser(w http.ResponseWriter, r *http.Request) {
 	var result user.User
 	err = s.db.Database("podoloff").Collection("users").FindOne(context.TODO(), bson.D{primitive.E{Key: "email", Value: u.Email}}).Decode(&result)
 	if err != nil {
-		io.WriteString(w, "No user found with that email address.")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode("No user found with that email address.")
 		return
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(result.Password), []byte(u.Password))
 
 	if err != nil {
-		io.WriteString(w, "Passwords do not match.")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode("Passwords do not match.")
 		return
 	}
 
@@ -73,9 +77,12 @@ func (s *Srv) authUser(w http.ResponseWriter, r *http.Request) {
 func (s *Srv) authTest(w http.ResponseWriter, r *http.Request) {
 	token, err := utils.ParseCookie(r)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode("Unable to authenticate user.")
+		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode("You are authenticated as... " + s.cache[token])
+	json.NewEncoder(w).Encode("You are authenticated as: " + s.cache[token])
 	return
 }

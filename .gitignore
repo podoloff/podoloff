@@ -1,3 +1,7 @@
 # Infrastructure
 **/.terraform
 *.tfstate*
+
+# UI
+/build
+/node_modules

@@ -86,5 +86,7 @@ func registerEndpoints(s *Srv) *http.ServeMux {
 
 	mux.HandleFunc("/getorg", s.getOrg)
 
+	mux.HandleFunc("/", s.notFound)
+
 	return mux
 }

@@ -10,6 +10,7 @@ export function login(email, password) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            "Accept": "application/json",
         },
         body: JSON.stringify(data),
     }).then(res => res.json())
@@ -24,7 +25,8 @@ export function isAuthed() {
     return fetch("/test", {
         method: "GET",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
+            "Accept": "application/json",
         },
     }).then(res => res.json())
 }
