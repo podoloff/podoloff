@@ -13,7 +13,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// CreateUser handles http request to create a user
+// createUser handles http request to create a user
 func (s *Srv) createUser(w http.ResponseWriter, r *http.Request) {
 	var u user.User
 	err := u.ParseUser(r)
@@ -43,7 +43,7 @@ func (s *Srv) createUser(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// AuthUser authenticates a user
+// authUser authenticates a user and adds to in memory cache
 func (s *Srv) authUser(w http.ResponseWriter, r *http.Request) {
 	var u user.User
 	err := u.ParseUser(r)
@@ -73,7 +73,23 @@ func (s *Srv) authUser(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// AuthTest tests to see if use has active session
+// clearUser removes a user from in memory cache
+func (s *Srv) clearUser(w http.ResponseWriter, r *http.Request) {
+	token, err := utils.ParseCookie(r)
+	if err != nil {
+		log.Print(err)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode("Unable to identify a currently cached user.")
+		return
+	}
+	email := s.cache[token]
+	delete(s.cache, token)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode("User " + email + " removed from cache.")
+	return
+}
+
+// authTest tests to see if use has active session
 func (s *Srv) authTest(w http.ResponseWriter, r *http.Request) {
 	token, err := utils.ParseCookie(r)
 	if err != nil {

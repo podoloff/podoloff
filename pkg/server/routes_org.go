@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// create a new organization
+// createOrg creates a new organization
 func (s *Srv) createOrg(w http.ResponseWriter, r *http.Request) {
 	var o org.Org
 	err := o.ParseOrg(r)
@@ -37,7 +37,7 @@ func (s *Srv) createOrg(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// AuthUser authenticates a user
+// getOrg retrieves an organization's information
 func (s *Srv) getOrg(w http.ResponseWriter, r *http.Request) {
 	var o org.Org
 	err := o.ParseOrg(r)

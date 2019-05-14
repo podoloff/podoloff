@@ -76,15 +76,17 @@ func (s *Srv) Stop() error {
 func registerEndpoints(s *Srv) *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/register", s.createUser)
+	mux.HandleFunc("/user/register", s.createUser)
 
-	mux.HandleFunc("/authenticate", s.authUser)
+	mux.HandleFunc("/user/authenticate", s.authUser)
 
-	mux.HandleFunc("/test", s.authTest)
+	mux.HandleFunc("/user/test", s.authTest)
 
-	mux.HandleFunc("/registerorg", s.createOrg)
+	mux.HandleFunc("/user/clear", s.clearUser)
 
-	mux.HandleFunc("/getorg", s.getOrg)
+	mux.HandleFunc("/org/register", s.createOrg)
+
+	mux.HandleFunc("/org/get", s.getOrg)
 
 	mux.HandleFunc("/", s.notFound)
 
