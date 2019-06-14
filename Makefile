@@ -13,3 +13,5 @@ test:
 clean: 
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)
+
+.PHONY: build test clean
